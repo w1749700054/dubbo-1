@@ -219,27 +219,27 @@ public class DubboProtocol extends AbstractProtocol {
         URL url = invoker.getUrl();
 
         // export service.
-        String key = serviceKey(url);
+        String key = serviceKey(url);//将url拼接成group/path:version:port格式
         DubboExporter<T> exporter = new DubboExporter<T>(invoker, key, exporterMap);
         exporterMap.put(key, exporter);
 
         //export an stub service for dispaching event
         Boolean isStubSupportEvent = url.getParameter(Constants.STUB_EVENT_KEY, Constants.DEFAULT_STUB_EVENT);
         Boolean isCallbackservice = url.getParameter(Constants.IS_CALLBACK_SERVICE, false);
+
         if (isStubSupportEvent && !isCallbackservice) {
-            String stubServiceMethods = url.getParameter(Constants.STUB_EVENT_METHODS_KEY);
+            String stubServiceMethods = url.getParameter(Constants.STUB_EVENT_METHODS_KEY);//降级服务
             if (stubServiceMethods == null || stubServiceMethods.length() == 0) {
                 if (logger.isWarnEnabled()) {
                     logger.warn(new IllegalStateException("consumer [" + url.getParameter(Constants.INTERFACE_KEY) +
                             "], has set stubproxy support event ,but no stub methods founded."));
                 }
             } else {
-                stubServiceMethodsMap.put(url.getServiceKey(), stubServiceMethods);
+                stubServiceMethodsMap.put(url.getServiceKey(), stubServiceMethods);//url.getServiceKey,拼接顺序group/interface:version
             }
         }
 
         openServer(url);
-
         return exporter;
     }
 
@@ -258,7 +258,7 @@ public class DubboProtocol extends AbstractProtocol {
             }
         }
     }
-
+    //主要方法用于获取长连接·
     private ExchangeServer createServer(URL url) {
         //默认开启server关闭时发送readonly事件
         url = url.addParameterIfAbsent(Constants.CHANNEL_READONLYEVENT_SENT_KEY, Boolean.TRUE.toString());

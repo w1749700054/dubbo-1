@@ -47,6 +47,7 @@ public abstract class AbstractProtocol implements Protocol {
     protected final Set<Invoker<?>> invokers = new ConcurrentHashSet<Invoker<?>>();
 
     protected static String serviceKey(URL url) {
+
         return ProtocolUtils.serviceKey(url);
     }
 
