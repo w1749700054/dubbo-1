@@ -251,6 +251,7 @@ public class DubboProtocol extends AbstractProtocol {
         if (isServer) {
             ExchangeServer server = serverMap.get(key);
             if (server == null) {
+                //createServer(url)获取长连接
                 serverMap.put(key, createServer(url));
             } else {
                 //server支持reset,配合override功能使用
@@ -258,12 +259,13 @@ public class DubboProtocol extends AbstractProtocol {
             }
         }
     }
-    //主要方法用于获取长连接·
+    //主要方法用于获取长连接，获取serverBootStrap
     private ExchangeServer createServer(URL url) {
         //默认开启server关闭时发送readonly事件
         url = url.addParameterIfAbsent(Constants.CHANNEL_READONLYEVENT_SENT_KEY, Boolean.TRUE.toString());
         //默认开启heartbeat
         url = url.addParameterIfAbsent(Constants.HEARTBEAT_KEY, String.valueOf(Constants.DEFAULT_HEARTBEAT));
+        //默认使用netty作为长连接
         String str = url.getParameter(Constants.SERVER_KEY, Constants.DEFAULT_REMOTING_SERVER);
 
         if (str != null && str.length() > 0 && !ExtensionLoader.getExtensionLoader(Transporter.class).hasExtension(str))

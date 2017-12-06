@@ -46,6 +46,7 @@ import java.util.Map;
  * @author william.liangf
  * @export
  */
+//用于
 public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean, DisposableBean, ApplicationContextAware, ApplicationListener<ContextRefreshedEvent>, BeanNameAware {
 
     private static final long serialVersionUID = 213195494150089726L;
@@ -130,7 +131,16 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
         }
         return supportedApplicationListener && (delay == null || delay == -1);
     }
-
+    /*
+     **   用于serviceConfig的数据加载和发布
+     **   类似于api的
+     *   demoService.setInterface(DemoService.class);
+     *  demoService.setRef(new DemoServiceImpl());
+     *  demoService.setApplication(application);
+     *  demoService.setRegistry(registry);
+     *  demoService.setProtocol(protocol);
+     *
+     */
     @SuppressWarnings({"unchecked", "deprecation"})
     public void afterPropertiesSet() throws Exception {
         if (getProvider() == null) {

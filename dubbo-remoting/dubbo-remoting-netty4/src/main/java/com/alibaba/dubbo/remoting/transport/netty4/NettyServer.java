@@ -67,7 +67,7 @@ public class NettyServer extends AbstractServer implements Server {
     public NettyServer(URL url, ChannelHandler handler) throws RemotingException {
         super(url, ChannelHandlers.wrap(handler, ExecutorUtil.setThreadName(url, SERVER_THREAD_POOL_NAME)));
     }
-
+    //netty的长连接
     @Override
     protected void doOpen() throws Throwable {
         NettyHelper.setNettyLoggerFactory();
@@ -77,7 +77,6 @@ public class NettyServer extends AbstractServer implements Server {
         bossGroup = new NioEventLoopGroup(1, new DefaultThreadFactory("NettyServerBoss", true));
         workerGroup = new NioEventLoopGroup(getUrl().getPositiveParameter(Constants.IO_THREADS_KEY, Constants.DEFAULT_IO_THREADS),
                 new DefaultThreadFactory("NettyServerWorker", true));
-
         final NettyServerHandler nettyServerHandler = new NettyServerHandler(getUrl(), this);
         channels = nettyServerHandler.getChannels();
 
@@ -102,7 +101,7 @@ public class NettyServer extends AbstractServer implements Server {
         channel = channelFuture.channel();
 
     }
-
+    //关闭长连接：关闭顺序，先关闭channel，channels，然后关闭bossGroup，workGroup
     @Override
     protected void doClose() throws Throwable {
         try {

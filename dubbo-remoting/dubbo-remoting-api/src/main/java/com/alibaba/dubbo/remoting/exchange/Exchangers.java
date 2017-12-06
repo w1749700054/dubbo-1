@@ -116,6 +116,7 @@ public class Exchangers {
     }
 
     public static Exchanger getExchanger(String type) {
+        //通过dubbo spi获取Exchanger类
         return ExtensionLoader.getExtensionLoader(Exchanger.class).getExtension(type);
     }
 

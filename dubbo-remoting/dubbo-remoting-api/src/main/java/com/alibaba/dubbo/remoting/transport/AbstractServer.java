@@ -48,8 +48,9 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server 
     private InetSocketAddress bindAddress;
     private int accepts;
     private int idleTimeout = 600; //600 seconds
-
+    //
     public AbstractServer(URL url, ChannelHandler handler) throws RemotingException {
+        //父类赋值，codec，timeout，connectTimeout,url,handler，codec会在长连接是加入ch
         super(url, handler);
         localAddress = getUrl().toInetSocketAddress();
 
@@ -62,6 +63,7 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server 
         this.accepts = url.getParameter(Constants.ACCEPTS_KEY, Constants.DEFAULT_ACCEPTS);
         this.idleTimeout = url.getParameter(Constants.IDLE_TIMEOUT_KEY, Constants.DEFAULT_IDLE_TIMEOUT);
         try {
+            //netty等的长连接在该方法中执行
             doOpen();
             if (logger.isInfoEnabled()) {
                 logger.info("Start " + getClass().getSimpleName() + " bind " + getBindAddress() + ", export " + getLocalAddress());
@@ -76,9 +78,9 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server 
     }
 
     protected abstract void doOpen() throws Throwable;
-
+    //抽象方法模式
     protected abstract void doClose() throws Throwable;
-
+    //设置accepts，心跳包的超时，线程的最大线程数，
     public void reset(URL url) {
         if (url == null) {
             return;

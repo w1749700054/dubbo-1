@@ -38,6 +38,7 @@ public class HeaderExchanger implements Exchanger {
     }
 
     public ExchangeServer bind(URL url, ExchangeHandler handler) throws RemotingException {
+        //疑问：DecodeHandler什么用
         return new HeaderExchangeServer(Transporters.bind(url, new DecodeHandler(new HeaderExchangeHandler(handler))));
     }
 
